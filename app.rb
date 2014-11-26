@@ -1,7 +1,7 @@
 require 'bundler'
 Bundler.require
 
-$redis = Redis.new(url: ENV.fetch("OPENREDIS_URL", "redis://127.0.0.1:6379"), driver: :hiredis)
+$redis = Redis.new(url: ENV.fetch("REDISCLOUD_URL", "redis://127.0.0.1:6379"), driver: :hiredis)
 
 class DeploymentBadges < Sinatra::Base
   require "sinatra/reloader" if development?
