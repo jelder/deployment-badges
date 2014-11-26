@@ -1,6 +1,8 @@
 require 'bundler'
 Bundler.require
 
+Dir[File.expand_path('../lib/*.rb',  __FILE__)].each { |f| require f }
+
 $redis = Redis.new(url: ENV.fetch("REDISCLOUD_URL", "redis://127.0.0.1:6379"), driver: :hiredis)
 
 class DeploymentBadges < Sinatra::Base
