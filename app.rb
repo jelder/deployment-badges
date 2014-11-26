@@ -18,29 +18,40 @@ class DeploymentBadges < Sinatra::Base
     register Sinatra::Reloader
   end
 
-  post '/badges/:id' do
+  post '/badges/:secret_key/:id' do
     if params[:secret_key] != secret_key
       status 403 and return
     end
-    $redis.hmset params[:id],
-      :github, params[:github],
-      :commit_hash, params[:commit_hash],
-      :updated_at, Time.now.to_i
+    if resource = Resource.find(params[:id])
+      resource.attributes.merge! params
+    else
+      resource = Resource.new(params) # Mass assignment? Pff whatever.
+      resource.save
+    end
+    content_type 'application/json'
+    body JSON.generate(resource.attributes)
   end
 
   get '/badges/:id.svg' do
-    if app = fetch_app(params[:id])
+    if resource = Resource.find(params[:id])
       content_type "image/svg+xml"
-      erb :badge, locals: app
+      erb :badge, locals: { resource: resource }
+    else
+      status 404 and return
+    end
+  end
+
+  get '/badges/:id/github' do
+    if resource = Resource.find(params[:id])
+      redirect "https://github.com/#{resource[:github]}/tree/#{app[:commit_hash]}"
     else
       status 404 and return
     end
   end
 
   get '/badges/:id' do
-    if app = fetch_app(params[:id])
-      body app.inspect
-      redirect "https://github.com/#{app[:github]}/tree/#{app[:commit_hash]}"
+    if resource = Resource.find(params[:id])
+      haml :badge, locals: { resource: resource }
     else
       status 404 and return
     end
@@ -50,12 +61,6 @@ class DeploymentBadges < Sinatra::Base
 
     def secret_key
       ENV.fetch("SECRET_KEY")
-    end
-
-    def fetch_app(id)
-      result = $redis.hmget params[:id], :github, :commit_hash, :updated_at
-      return if result.compact.empty?
-      [:github, :commit_hash, :updated_at].zip(result).to_h
     end
 
 end
