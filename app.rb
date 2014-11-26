@@ -16,19 +16,29 @@ class DeploymentBadges < Sinatra::Base
     BetterErrors.application_root = __dir__
 
     register Sinatra::Reloader
+    Dir[File.expand_path('../lib/*.rb',  __FILE__)].each { |f| also_reload f }
   end
 
   post '/badges/:secret_key/:id' do
+    STDERR.puts params.inspect
     if params[:secret_key] != secret_key
-      status 403 and return
+      body "Forbidden"
+      status 403
+      return
     end
     if resource = Resource.find(params[:id])
-      resource.attributes.merge! params
+      resource.assign_attributes(params)
     else
-      resource = Resource.new(params) # Mass assignment? Pff whatever.
-      resource.save
+      resource = Resource.new(id: params[:id])
+      resource.assign_attributes(params)
+    end
+    unless resource.save
+      body "Dunno"
+      status 401
+      return
     end
     content_type 'application/json'
+    # body resource.inspect
     body JSON.generate(resource.attributes)
   end
 
@@ -37,7 +47,8 @@ class DeploymentBadges < Sinatra::Base
       content_type "image/svg+xml"
       erb :badge, locals: { resource: resource }
     else
-      status 404 and return
+      body "Not found"
+      status 404
     end
   end
 
@@ -45,7 +56,8 @@ class DeploymentBadges < Sinatra::Base
     if resource = Resource.find(params[:id])
       redirect "https://github.com/#{resource[:github]}/tree/#{app[:commit_hash]}"
     else
-      status 404 and return
+      body "Not found"
+      status 404
     end
   end
 
@@ -53,7 +65,8 @@ class DeploymentBadges < Sinatra::Base
     if resource = Resource.find(params[:id])
       haml :badge, locals: { resource: resource }
     else
-      status 404 and return
+      body "Not found"
+      status 404
     end
   end
 

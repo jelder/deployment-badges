@@ -15,8 +15,12 @@ class Resource
 
   def initialize(attributes = {})
     @id = attributes.delete(:id) or raise ArgumentError, "This isn't Postgres. You need to come up with your own primary keys."
-    attributes.assert_valid_keys(FIELDS)
-    @attributes = attributes
+    @attributes = attributes.symbolize_keys
+    @attributes.assert_valid_keys(FIELDS)
+  end
+
+  def assign_attributes(attributes)
+    @attributes.merge!(attributes.symbolize_keys.slice(*FIELDS))
   end
 
   def [](key)
@@ -32,6 +36,8 @@ class Resource
   end
 
   def save
+    @attributes.symbolize_keys!
+    @attributes.assert_valid_keys(FIELDS)
     $redis.hmset(id, *@attributes.slice(*FIELDS).merge(updated_at: Time.now.to_i).flatten) == "OK"
   end
 
