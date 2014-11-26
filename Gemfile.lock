@@ -3,33 +3,37 @@ GEM
   specs:
     awesome_print (1.2.0)
     backports (3.6.4)
+    better_errors (2.0.0)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
+      rack (>= 0.9.0)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     coderay (1.1.0)
     daemon_controller (1.2.0)
+    debug_inspector (0.0.2)
+    erubis (2.7.0)
     haml (4.0.5)
       tilt
-    hiredis (0.4.5)
+    hiredis (0.5.2)
     method_source (0.8.2)
     multi_json (1.10.1)
     newrelic_rpm (3.9.7.266)
-    passenger (5.0.0.beta1)
+    passenger (4.0.53)
       daemon_controller (>= 1.2.0)
       rack
       rake (>= 0.8.1)
-    pry (0.9.6)
-      coderay (>= 0.9.8)
-      method_source (>= 0.6.5)
-      ruby_parser (>= 2.0.5)
-      slop (~> 2.1.0)
+    pry (0.10.1)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
     rake (10.4.0)
-    redis (3.0.5)
-    ruby_parser (3.2.2)
-      sexp_processor (~> 4.1)
-    sexp_processor (4.3.0)
+    redis (3.1.0)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -41,7 +45,7 @@ GEM
       rack-test
       sinatra (~> 1.4.0)
       tilt (~> 1.3)
-    slop (2.1.0)
+    slop (3.6.0)
     tilt (1.4.1)
 
 PLATFORMS
@@ -49,10 +53,12 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_print
+  better_errors
+  binding_of_caller
   haml
   hiredis
   newrelic_rpm
-  passenger (= 5.0.0.beta1)
+  passenger
   pry
   redis
   sinatra
