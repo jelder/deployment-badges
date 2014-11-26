@@ -54,7 +54,7 @@ class DeploymentBadges < Sinatra::Base
 
   get '/badges/:id/github' do
     if resource = Resource.find(params[:id])
-      redirect "https://github.com/#{resource[:github]}/tree/#{resource[:head_long]}"
+      redirect "https://github.com/#{resource[:github]}/compare/master...#{resource[:head_long]}"
     else
       body "Not found"
       status 404
