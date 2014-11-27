@@ -1,0 +1,6 @@
+!!! HTML
+%head
+  %title= "Deployment Badge for #{resource[:app]}"
+%body
+  %a{ href: "https://deployment-badges.herokuapp.com/badges/#{resource.id}/github"}
+    %img{src: "https://deployment-badges.herokuapp.com/badges/#{resource.id}.svg"}

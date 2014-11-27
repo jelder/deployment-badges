@@ -36,6 +36,10 @@ class Resource
     @attributes
   end
 
+  def compare_url
+    "https://github.com/#{@attributes[:github]}/compare/master...#{@attributes[:head_long]}"
+  end
+
   def save
     @attributes.symbolize_keys!
     @attributes.assert_valid_keys(FIELDS)
