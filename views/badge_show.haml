@@ -1,24 +1,27 @@
 !!! HTML
-%head
-  %title= "Deployment Badge for #{resource[:app]}"
-  %link{ rel: "stylesheet", href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" }
-  / %script{ src: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"}
-%body
-  .container
+%html{lang: "en"}
+  %head
+    %title= "Deployment Badge for #{resource[:app]}"
+    %link{ rel: "stylesheet", href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" }
+    %script{ src: "//code.jquery.com/jquery-1.11.0.min.js" }
+    %script{ src: "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"}
+  %body
+    .container
 
-    %h1= "Deployment Badge for #{resource[:app]}"
+      %h1= "Deployment Badge for #{resource[:app]}"
 
-    %p Add this badge do your README.md:
-    %textarea.form-control{ style: "font-family: monospace" }
-      [![Deployment Badge](https://deployment-badges.herokuapp.com/badges/#{resource.id}.svg)](https://deployment-badges.herokuapp.com/badges/#{resource.id}/github)
+      %iframe{src: "/badges/#{resource.id}.svg", width: 200, height: 18, frameBorder: 0}
 
-    %iframe{src: "/badges/#{resource.id}.svg", width: 200, height: 18, frameBorder: 0}
+      %p Add this badge do your README.md:
+      %pre
+        %code.language-markdown{ data: { lang: "markdown" } }
+          [![Deployment Badge](https://deployment-badges.herokuapp.com/badges/#{resource.id}.svg)](https://deployment-badges.herokuapp.com/badges/#{resource.id}/github)
 
-    %table.table.table-striped.table-condensed
-      %tr
-        %th Attribute
-        %th Value
-      - resource.attributes.each do |attribute, value|
+      %table.table.table-striped.table-condensed
         %tr
-          %td= attribute
-          %td= value
+          %th Attribute
+          %th Value
+        - resource.attributes.each do |attribute, value|
+          %tr
+            %td= attribute
+            %td= value
