@@ -6,6 +6,8 @@
 %body
   .container
 
+    %h1= "Deployment Badge for #{resource[:app]}"
+
     %p Add this badge do your README.md:
     %textarea.form-control{ style: "font-family: monospace" }
       [![Deployment Badge](https://deployment-badges.herokuapp.com/badges/#{resource.id}.svg)](https://deployment-badges.herokuapp.com/badges/#{resource.id}/github)
