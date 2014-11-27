@@ -11,6 +11,7 @@ class Resource
     head
     head_long
     git_log
+    updated_at
   ]
 
   def initialize(attributes = {})
