@@ -2,6 +2,10 @@
   "name": "Deployment Badges",
   "description": "Put a link in your README to the currently deployed commit",
   "repository": "https://www.github.com/jelder/deployment-badges",
+  "success_url": "/badges/1",
+  "scripts": {
+    "postdeploy": "./setup.rb"
+  },
   "env": {
     "SECRET_KEY": {
       "description": "A lazy shared secret hack. This is a required parameter (lowerecase key name) for all mutating requests.",
