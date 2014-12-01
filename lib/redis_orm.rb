@@ -16,7 +16,7 @@ class RedisOrm
   end
 
   def assign_attributes(attributes)
-    attributes.merge!(attributes.symbolize_keys.slice(*self.class.fields))
+    @attributes.merge!(attributes.symbolize_keys.slice(*self.class.fields))
   end
 
   def [](key)
