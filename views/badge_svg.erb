@@ -19,10 +19,10 @@
   <rect rx="4"  fill="url(#a)"  width="200" height="18"/>
   <g font-size="11" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" fill="#fff">
       <text id="time_ago_shadow" fill="#010101" fill-opacity=".3" x="38" y="14">
-        Deployed
+        <%= status %>
       </text>
       <text id="time_ago" x="38" y="13">
-        Deployed
+        <%= status %>
       </text>
       <use xlink:href="#cloud-upload" fill="#fff" transform="scale(0.9)" x="6" y="-2"/>
       <text fill="#010101" fill-opacity=".3" x="133" y="14">
@@ -32,16 +32,18 @@
         <%= resource[:head] %>
       </text>
   </g>
-  <script xlink:href="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js" />
-  <script type="text/javascript">
-    <![CDATA[
-      var updated_at = <%= resource[:updated_at] %>;
-      (function(){
-        var time_ago = moment.unix(updated_at).fromNow();
-        document.getElementById('time_ago').textContent = time_ago;
-        document.getElementById('time_ago_shadow').textContent = time_ago;
-        setTimeout(arguments.callee, 1000);
-      })();
-    ]]>
-  </script>
+  <% if resource[:updated_at] %>
+    <script xlink:href="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js" />
+    <script type="text/javascript">
+      <![CDATA[
+        var updated_at = <%= resource[:updated_at] %>;
+        (function(){
+          var time_ago = moment.unix(updated_at).fromNow();
+          document.getElementById('time_ago').textContent = time_ago;
+          document.getElementById('time_ago_shadow').textContent = time_ago;
+          setTimeout(arguments.callee, 1000);
+        })();
+      ]]>
+    </script>
+  <% end %>
 </svg>

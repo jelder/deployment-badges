@@ -45,25 +45,16 @@ class DeploymentBadges < Sinatra::Base
   get '/badges/:id.svg' do
     if resource = Resource.find(params[:id])
       content_type "image/svg+xml"
-      erb :badge_svg, locals: { resource: resource }
+      erb :badge_svg, locals: { resource: resource, status: "Deployed" }
     else
-      body "Not found"
-      status 404
+      content_type "image/svg+xml"
+      erb :badge_svg, locals: { resource: {}, status: "Not Deployed" }
     end
   end
 
   get '/badges/:id/github' do
     if resource = Resource.find(params[:id])
       redirect resource.compare_url
-    else
-      body "Not found"
-      status 404
-    end
-  end
-
-  get '/badges/:id/iframe' do
-    if resource = Resource.find(params[:id])
-      haml :badge_iframe, locals: { resource: resource }
     else
       body "Not found"
       status 404
