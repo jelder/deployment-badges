@@ -1,6 +1,7 @@
 class RedisOrm
 
   attr_reader :id
+  attr_reader :key
   attr_reader :attributes
 
   def self.fields
@@ -9,6 +10,7 @@ class RedisOrm
 
   def initialize(attributes = {})
     @id = attributes.delete(:id) or raise ArgumentError, "This isn't Postgres. You need to come up with your own primary keys."
+    @key = self.class.key(id)
     @attributes = attributes.symbolize_keys
     @attributes.assert_valid_keys(self.class.fields)
   end
@@ -32,13 +34,24 @@ class RedisOrm
   def save
     attributes.symbolize_keys!
     attributes.assert_valid_keys(self.class.fields)
-    $redis.hmset(id, *attributes.slice(*self.class.fields).merge(updated_at: Time.now.to_i).flatten) == "OK"
+    $redis.hmset(key, *attributes.slice(*self.class.fields).merge(updated_at: Time.now.to_i).flatten) == "OK"
   end
 
   def self.find(id)
-    result = $redis.hmget id, fields
+    result = $redis.hmget key(id), fields
     return if result.compact.empty?
     new(fields.zip(result).to_h.merge(id: id))
+  end
+
+  def self.create_or_update(id, attributes)
+    instance = Resource.find(id) || Resource.new(id: id)
+    instance.assign_attributes(attributes)
+    instance.save
+    return instance
+  end
+
+  def self.key(id)
+    "#{name}_#{id}"
   end
 
 end
