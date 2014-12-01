@@ -10,7 +10,8 @@
 
       %h1= "Deployment Badge for #{resource[:app]}"
 
-      %iframe{src: "/badges/#{resource.id}.svg", width: 200, height: 18, frameBorder: 0}
+      %a{ href: resource.compare_url }
+        %img{src: "/badges/#{resource.id}.svg"}
 
       %p Add this badge do your README.md:
       %pre
