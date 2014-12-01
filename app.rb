@@ -26,19 +26,12 @@ class DeploymentBadges < Sinatra::Base
       status 403
       return
     end
-    if resource = Resource.find(params[:id])
-      resource.assign_attributes(params)
-    else
-      resource = Resource.new(id: params[:id])
-      resource.assign_attributes(params)
-    end
-    unless resource.save
+    unless resource = Resource.create_or_update(params[:id], params)
       body "Dunno"
       status 401
       return
     end
     content_type 'application/json'
-    # body resource.inspect
     body JSON.generate(resource.attributes)
   end
 

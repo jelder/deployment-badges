@@ -1,43 +1,20 @@
-class Resource
+class Resource < RedisOrm
 
-  attr_reader :id
-  attr_reader :attributes
-
-  FIELDS = %i[
-    github
-    app
-    user
-    url
-    head
-    head_long
-    git_log
-    updated_at
-  ]
-
-  def initialize(attributes = {})
-    @id = attributes.delete(:id) or raise ArgumentError, "This isn't Postgres. You need to come up with your own primary keys."
-    @attributes = attributes.symbolize_keys
-    @attributes.assert_valid_keys(FIELDS)
-  end
-
-  def assign_attributes(attributes)
-    @attributes.merge!(attributes.symbolize_keys.slice(*FIELDS))
-  end
-
-  def [](key)
-    @attributes[key]
-  end
-
-  def []=(key, value)
-    @attributes[key] = value
-  end
-
-  def to_h
-    @attributes
+  def self.fields
+    %i[
+      github
+      app
+      user
+      url
+      head
+      head_long
+      git_log
+      updated_at
+    ].freeze
   end
 
   def compare_url
-    "https://github.com/#{@attributes[:github]}/compare/master...#{@attributes[:head_long]}"
+    "https://github.com/#{attributes[:github]}/compare/master...#{attributes[:head_long]}"
   end
 
   def age
@@ -58,18 +35,6 @@ class Resource
 
   def style
     "fill: #{color}"
-  end
-
-  def save
-    @attributes.symbolize_keys!
-    @attributes.assert_valid_keys(FIELDS)
-    $redis.hmset(id, *@attributes.slice(*FIELDS).merge(updated_at: Time.now.to_i).flatten) == "OK"
-  end
-
-  def self.find(id)
-    result = $redis.hmget id, FIELDS
-    return if result.compact.empty?
-    new(FIELDS.zip(result).to_h.merge(id: id))
   end
 
 end
