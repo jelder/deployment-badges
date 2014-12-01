@@ -19,7 +19,7 @@ GEM
     method_source (0.8.2)
     multi_json (1.10.1)
     newrelic_rpm (3.9.7.266)
-    passenger (4.0.53)
+    passenger (5.0.0.beta1)
       daemon_controller (>= 1.2.0)
       rack
       rake (>= 0.8.1)
@@ -58,7 +58,7 @@ DEPENDENCIES
   haml
   hiredis
   newrelic_rpm
-  passenger
+  passenger (= 5.0.0.beta1)
   pry
   redis
   sinatra
