@@ -1,7 +1,7 @@
 require 'bundler'
 Bundler.require
 
-Dir[File.expand_path('../lib/*.rb',  __FILE__)].each { |f| require f }
+Dir[File.expand_path('../lib/*.rb',  __FILE__)].sort.each { |f| require f }
 
 $redis = Redis.new(url: ENV.fetch("REDISCLOUD_URL", "redis://127.0.0.1:6379"), driver: :hiredis)
 
@@ -26,19 +26,12 @@ class DeploymentBadges < Sinatra::Base
       status 403
       return
     end
-    if resource = Resource.find(params[:id])
-      resource.assign_attributes(params)
-    else
-      resource = Resource.new(id: params[:id])
-      resource.assign_attributes(params)
-    end
-    unless resource.save
+    unless resource = Resource.create_or_update(params[:id], params)
       body "Dunno"
       status 401
       return
     end
     content_type 'application/json'
-    # body resource.inspect
     body JSON.generate(resource.attributes)
   end
 
